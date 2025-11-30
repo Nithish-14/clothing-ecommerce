@@ -21,24 +21,25 @@ connectDB();
 
 const allowedOrigins = [
   "http://localhost:5173", // local dev
-  process.env.CLIENT_URL, // production Vercel frontend
+  process.env.CLIENT_URL, // Vercel production frontend
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
+      // Allow requests with no origin — like Postman or server requests
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.log("❌ Blocked by CORS:", origin);
         callback(new Error("CORS not allowed"));
       }
     },
     credentials: true,
   })
 );
-
 // middlewares
 app.use(morgan("dev"));
 app.use(express.json());
